@@ -1,0 +1,22 @@
+<h1>BC Consulting Dashboard</h1>
+<table id="submissionsTable"></table>
+
+<script>
+async function loadSubmissions(){
+  const res = await fetch('/submissions');
+  if(res.status===401){alert('Unauthorized'); window.location.href='/login.html'; return;}
+  const data = await res.json();
+  const table = document.getElementById('submissionsTable');
+  table.innerHTML = "<tr><th>ID</th><th>Name</th><th>Financials</th><th>Other Info</th><th>File</th><th>Date</th></tr>";
+  data.forEach(s => {
+    const row = table.insertRow();
+    row.insertCell(0).innerText = s.id;
+    row.insertCell(1).innerText = s.name;
+    row.insertCell(2).innerText = s.financials;
+    row.insertCell(3).innerText = s.otherInfo;
+    row.insertCell(4).innerHTML = s.filePath ? `<a href="${s.filePath}" target="_blank">View</a>` : 'No File';
+    row.insertCell(5).innerText = new Date(s.date).toLocaleString();
+  });
+}
+loadSubmissions();
+</script>
